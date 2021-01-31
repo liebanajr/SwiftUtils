@@ -9,14 +9,14 @@ import Foundation
 
 //MARK: Dates management
 
- public struct TrueDate : Codable {
+public struct TrueDate : Codable {
     public let currentDateTime : String?
     public let utcOffset : String?
     public let isDayLightSavingsTime : Bool?
     public let timeZoneName : String?
 }
 
- public extension DateFormatter {
+public extension DateFormatter {
     static  func appStoreDateFormat() -> String{
         return "yyyy-MM-dd'T'HH:mm:ssZ"
     }
@@ -26,7 +26,7 @@ import Foundation
     }
 }
 
- public extension Date {
+public extension Date {
     
     static  func fetchTrueDate(from url: String, _ completion: @escaping (_ date: Date) -> Void){
         let url = URL(string: url)!
@@ -38,14 +38,14 @@ import Foundation
                 completion(Date())
                 return
             }
-
+            
             guard response.statusCode != 0 else {                    // check for http errors
                 Log.error("statusCode should be 2xx, but is \(response.statusCode)")
                 Log.error("response = \(response)")
                 completion(Date())
                 return
             }
-
+            
             do {
                 let decoder = JSONDecoder()
                 let trueDate = try decoder.decode(TrueDate.self, from: data)
@@ -76,16 +76,16 @@ import Foundation
         
         return dateFormatter.date(from: string)
     }
-
-     func isEqual(to date: Date, toGranularity component: Calendar.Component, in calendar: Calendar = .current) -> Bool {
+    
+    func isEqual(to date: Date, toGranularity component: Calendar.Component, in calendar: Calendar = .current) -> Bool {
         calendar.isDate(self, equalTo: date, toGranularity: component)
     }
-
-     func isInSameYear(as date: Date) -> Bool { isEqual(to: date, toGranularity: .year) }
-     func isInSameMonth(as date: Date) -> Bool { isEqual(to: date, toGranularity: .month) }
-     func isInSameWeek(as date: Date) -> Bool { isEqual(to: date, toGranularity: .weekOfYear) }
     
-     func formatted(for component: Calendar.Component, isLong longFormat: Bool) -> String? {
+    func isInSameYear(as date: Date) -> Bool { isEqual(to: date, toGranularity: .year) }
+    func isInSameMonth(as date: Date) -> Bool { isEqual(to: date, toGranularity: .month) }
+    func isInSameWeek(as date: Date) -> Bool { isEqual(to: date, toGranularity: .weekOfYear) }
+    
+    func formatted(for component: Calendar.Component, isLong longFormat: Bool) -> String? {
         let dateFormatter = DateFormatter()
         switch component {
         case .second:
@@ -109,7 +109,7 @@ import Foundation
         return dateFormatter.string(from: self)
     }
     
-     func appStoreFormatted() -> String {
+    func appStoreFormatted() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.dateFormat = DateFormatter.appStoreDateFormat()
@@ -117,21 +117,21 @@ import Foundation
         
         return dateFormatter.string(from: self)
     }
-
-     func isInSameDay(as date: Date) -> Bool { Calendar.current.isDate(self, inSameDayAs: date) }
-
-     var isInThisYear:  Bool { isInSameYear(as: Date()) }
-     var isInThisMonth: Bool { isInSameMonth(as: Date()) }
-     var isInThisWeek:  Bool { isInSameWeek(as: Date()) }
-
-     var isInYesterday: Bool { Calendar.current.isDateInYesterday(self) }
-     var isInToday:     Bool { Calendar.current.isDateInToday(self) }
-     var isInTomorrow:  Bool { Calendar.current.isDateInTomorrow(self) }
-
-     var isInTheFuture: Bool { self > Date() }
-     var isInThePast:   Bool { self < Date() }
     
-     func startOfDay() -> Date {
+    func isInSameDay(as date: Date) -> Bool { Calendar.current.isDate(self, inSameDayAs: date) }
+    
+    var isInThisYear:  Bool { isInSameYear(as: Date()) }
+    var isInThisMonth: Bool { isInSameMonth(as: Date()) }
+    var isInThisWeek:  Bool { isInSameWeek(as: Date()) }
+    
+    var isInYesterday: Bool { Calendar.current.isDateInYesterday(self) }
+    var isInToday:     Bool { Calendar.current.isDateInToday(self) }
+    var isInTomorrow:  Bool { Calendar.current.isDateInTomorrow(self) }
+    
+    var isInTheFuture: Bool { self > Date() }
+    var isInThePast:   Bool { self < Date() }
+    
+    func startOfDay() -> Date {
         let gregorian = Calendar(identifier: Calendar.current.identifier)
         var todayComponents = gregorian.dateComponents(in: TimeZone.current, from: self)
         todayComponents.hour = 0
@@ -139,7 +139,7 @@ import Foundation
         return gregorian.date(from: todayComponents)!
     }
     
-     func endOfDay() -> Date {
+    func endOfDay() -> Date {
         let gregorian = Calendar(identifier: Calendar.current.identifier)
         var todayComponents = gregorian.dateComponents(in: TimeZone.current, from: self)
         todayComponents.hour = 23
@@ -150,15 +150,15 @@ import Foundation
 
 //MARK: Number management
 
- public extension Int {
-     func toFormattedString() -> String{
+public extension Int {
+    func toFormattedString() -> String{
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.locale = Locale.current
         return formatter.string(from: NSNumber(value: self))!
     }
     
-     func timeIntervalFormatted() -> String {
+    func timeIntervalFormatted() -> String {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.day, .hour, .minute, .second]
         formatter.unitsStyle = .abbreviated
@@ -169,7 +169,7 @@ import Foundation
     }
 }
 public extension Int16 {
-     func toFormattedString() -> String{
+    func toFormattedString() -> String{
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.locale = Locale.current
@@ -177,7 +177,7 @@ public extension Int16 {
     }
 }
 public extension Int32 {
-     func toFormattedString() -> String{
+    func toFormattedString() -> String{
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.locale = Locale.current
@@ -185,7 +185,7 @@ public extension Int32 {
     }
 }
 public extension Int64 {
-     func toFormattedString() -> String{
+    func toFormattedString() -> String{
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.locale = Locale.current
@@ -194,14 +194,14 @@ public extension Int64 {
 }
 
 public extension Double {
-     func toFormattedString() -> String{
+    func toFormattedString() -> String{
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.locale = Locale.current
         return formatter.string(from: NSNumber(value: self))!
     }
     
-     func timeIntervalFormatted() -> String {
+    func timeIntervalFormatted() -> String {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.day, .hour, .minute, .second]
         formatter.unitsStyle = .short
@@ -212,7 +212,7 @@ public extension Double {
 }
 
 public extension Float {
-     func toFormattedString() -> String{
+    func toFormattedString() -> String{
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.locale = Locale.current
@@ -223,17 +223,27 @@ public extension Float {
 //MARK: String management
 
 public extension String {
-     func capitalizingFirstLetter() -> String {
+    func capitalizingFirstLetter() -> String {
         return prefix(1).capitalized + dropFirst()
     }
-
+    
     mutating  func capitalizeFirstLetter() {
         self = self.capitalizingFirstLetter()
     }
 }
 
-//MARK: App utilities
+//MARK: File Manager
 
+public extension FileManager {
+    func createDirectoryIfNonExistant(at url: URL) throws -> URL{
+        if !self.fileExists(atPath: url.relativePath) {
+            try self.createDirectory(at: url, withIntermediateDirectories: false, attributes: nil)
+        }
+        return url
+    }
+}
+
+//MARK: App utilities
 
 public struct AppInfo {
     public static var version : String? {
@@ -242,5 +252,30 @@ public struct AppInfo {
     
     public static var build : String? {
         return Bundle.main.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String
+    }
+    
+    public static func url(ofFileNamed name: String, in bundle: Bundle = .main) -> URL? {
+        return bundle.url(forResource: name, withExtension: nil) 
+    }
+    
+    public static func urls(forResourcesWithExtension ext: String, subdirectory sub: String?, in bundle: Bundle = .main) -> [URL]? {
+        return bundle.urls(forResourcesWithExtension: ext, subdirectory: sub)
+    }
+    
+    
+    public static var documentsDirURL : URL? {
+        do {
+            return try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        } catch {
+            return nil
+        }
+    }
+    
+    public static var downloadsDirURL : URL? {
+        do {
+            return try FileManager.default.url(for: .downloadsDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        } catch {
+            return nil
+        }
     }
 }
