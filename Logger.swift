@@ -8,8 +8,8 @@
 import Foundation
 
 enum LOGLEVEL{
-    case DEBUG
     case TRACE
+    case DEBUG
     case INFO
     case WARNING
     case ERROR
@@ -18,20 +18,20 @@ enum LOGLEVEL{
 public struct Log {
     
     #if DEBUG
-    static let minLogLevel : LOGLEVEL = .DEBUG
+    static let minLogLevel : LOGLEVEL = .TRACE
     #else
     static let minLogLevel : LOGLEVEL = .WARNING
     #endif
         
-    public static func debug(_ message: String){
-        if minLogLevel == .DEBUG {
-            print("\(Date()) 🐜 - \(message)")
+    public static func trace(_ message: String){
+        if minLogLevel == .TRACE {
+            print("\(Date()) 🔘 - \(message)")
         }
     }
     
-    public static func trace(_ message: String){
-        if minLogLevel == .TRACE || minLogLevel == .DEBUG {
-            print("\(Date()) 🔘 - \(message)")
+    public static func debug(_ message: String){
+        if minLogLevel == .DEBUG || minLogLevel == .TRACE {
+            print("\(Date()) 🐜 - \(message)")
         }
     }
     

@@ -235,10 +235,18 @@ public extension String {
 //MARK: File Manager
 
 public extension FileManager {
-    func createDirectoryIfNonExistant(at url: URL) throws -> URL{
-        if !self.fileExists(atPath: url.relativePath) {
-            try self.createDirectory(at: url, withIntermediateDirectories: false, attributes: nil)
+    func createDirectoryIfNonExistant(at url: URL) -> URL?{
+        if !self.fileExists(atPath: url.absoluteString) {
+            Log.debug("Creating directory \(url.absoluteString)")
+            do {
+                try self.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+                return url
+            } catch {
+                Log.error("Failed to create directory: \(error.localizedDescription)")
+                return nil
+            }
         }
+        Log.debug("Directory already exists: \(url.absoluteString)")
         return url
     }
 }
